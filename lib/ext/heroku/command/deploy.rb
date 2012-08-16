@@ -30,7 +30,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   end
 
   def migrate?
-    extract_option('--migrate')
+    options[:migrate]
   end
 
   # Utils
