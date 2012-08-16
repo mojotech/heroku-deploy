@@ -36,7 +36,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # Utils
 
   def run_command(name, args = [])
-    Heroku::Command.run name, args
+    Heroku::Command.run name, %W(--app #{app}).concat(args)
   end
 
   def with_maintenance
