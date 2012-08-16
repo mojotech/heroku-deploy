@@ -26,7 +26,10 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # Migrations
 
   def migrate
-    with_maintenance { run_command 'run', %w(rake db:migrate) } if migrate?
+    with_maintenance {
+      run_command 'run', %w(rake db:migrate)
+      run_command 'restart'
+    } if migrate?
   end
 
   def migrate?
