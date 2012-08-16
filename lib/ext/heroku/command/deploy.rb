@@ -20,15 +20,13 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   end
 
   def pushed
-    with_maintenance { migrate }
+    migrate
   end
 
   # Migrations
 
   def migrate
-    return unless migrate?
-
-    run_command 'run', %w(rake db:migrate)
+    with_maintenance { run_command 'run', %w(rake db:migrate) } if migrate?
   end
 
   def migrate?
