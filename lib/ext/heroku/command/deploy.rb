@@ -6,6 +6,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # deploy a ref (usually, the current HEAD)
   #
   # -m, --migrate  # run migrations after deploy
+  # -b, --backup   # perform a backup before migrating
   #
   def index
     push && pushed
@@ -27,6 +28,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
 
   def migrate
     with_maintenance {
+      backup
       run_command 'run', %w(rake db:migrate)
       run_command 'restart'
     } if migrate?
@@ -34,6 +36,16 @@ class Heroku::Command::Deploy < Heroku::Command::Base
 
   def migrate?
     options[:migrate]
+  end
+
+  # Backup
+
+  def backup
+    run_command 'pgbackups:capture', %w(--expire)
+  end
+
+  def backup?
+    options[:backup]
   end
 
   # Utils
