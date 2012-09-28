@@ -7,6 +7,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   #
   # -m, --migrate  # run migrations after deploy
   # -b, --backup   # perform a backup before migrating
+  # -v, --verbose  # be verbose
   #
   def index
     push && pushed
@@ -17,7 +18,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # Push
 
   def push
-    system(%{git push -f #{app} #{branch}:master})
+    system(%{git push -f #{verbose} #{app} #{branch}:master})
   end
 
   def pushed
@@ -46,6 +47,16 @@ class Heroku::Command::Deploy < Heroku::Command::Base
 
   def backup?
     options[:backup]
+  end
+
+  # Verbose
+
+  def verbose
+    "--verbose" if verbose?
+  end
+
+  def verbose?
+    options[:verbose]
   end
 
   # Utils
