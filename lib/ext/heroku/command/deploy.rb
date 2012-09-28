@@ -16,7 +16,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # Push
 
   def push
-    system(%{git push -f #{app} master})
+    system(%{git push -f #{app} #{branch}:master})
   end
 
   def pushed
@@ -37,6 +37,12 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   end
 
   # Utils
+
+  def branch
+    `git symbolic-ref HEAD`.strip.tap do
+      raise 'Failed to get current branch name' unless $?.success?
+    end
+  end
 
   def run_command(name, args = [])
     Heroku::Command.run name, %W(--app #{app}).concat(args)
