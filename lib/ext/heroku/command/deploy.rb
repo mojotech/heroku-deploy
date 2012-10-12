@@ -27,6 +27,14 @@ class Heroku::Command::Deploy < Heroku::Command::Base
     end
   end
 
+  # backup
+  #
+  # capture new backup
+  #
+  def backup
+    run_command 'pgbackups:capture', %W(--expire #{database})
+  end
+
   private
 
   # Push
@@ -58,10 +66,6 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   end
 
   # Backup
-
-  def backup
-    run_command 'pgbackups:capture', %W(--expire #{database})
-  end
 
   def backup?
     options[:backup]
