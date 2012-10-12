@@ -21,7 +21,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   #
   def migrate
     with_maintenance do
-      backup
+      backup if backup?
       run_migration
       restart
     end
