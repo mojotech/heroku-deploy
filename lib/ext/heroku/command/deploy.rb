@@ -13,6 +13,20 @@ class Heroku::Command::Deploy < Heroku::Command::Base
     push && pushed
   end
 
+  # migrate
+  #
+  # run rails migrations
+  #
+  # -b, --backup   # perform a backup before migrating
+  #
+  def migrate
+    with_maintenance do
+      backup
+      run_migration
+      restart
+    end
+  end
+
   private
 
   # Push
@@ -22,20 +36,10 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   end
 
   def pushed
-    migrate
+    migrate if migrate?
   end
 
   # Migrations
-
-  def migrate
-    if migrate?
-      with_maintenance do
-        backup
-        run_migration
-        restart
-      end
-    end
-  end
 
   def migrate?
     options[:migrate]
