@@ -41,6 +41,10 @@ class Heroku::Command::Deploy < Heroku::Command::Base
 
   # Migrations
 
+  def database
+    "SHARED_DATABASE" # this should probably not be hard-coded
+  end
+
   def migrate?
     options[:migrate]
   end
@@ -56,7 +60,7 @@ class Heroku::Command::Deploy < Heroku::Command::Base
   # Backup
 
   def backup
-    run_command 'pgbackups:capture', %w(--expire)
+    run_command 'pgbackups:capture', %W(--expire #{database})
   end
 
   def backup?
